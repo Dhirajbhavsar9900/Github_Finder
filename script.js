@@ -1,45 +1,41 @@
-document.getElementById('searchForm').addEventListener('submit', async function(event) {
+
+document.getElementById('searchForm').addEventListener('submit', function() {
+    // Prevent the default form submission behavior
     event.preventDefault();
     
+    // Get the value of the input field (GitHub username)
     const username = document.getElementById('default-search').value.trim();
-
+    // Check if the input field is empty
     if (username === '') {
         alert('Please enter a username.');
         return;
     }
 
-    const userData = await fetchUserData(username);
-
-    if (!userData) {
-        alert('User not found.');
-        return;
+    // Fetch user data from GitHub APi
+    async function fetchUser(){
+        const res = await fetch(`https://api.github.com/users/${username}`);
+        const data = await res.json();
+        displayUserData(data);
+        console.log(data);
     }
-
-    displayUserData(userData);
+    fetchUser();
 });
 
-async function fetchUserData(username) {
-    try {
-        const response = await fetch(`https://api.github.com/users/${username}`);
-        if (!response.ok) {
-            return null;
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        return null;
-    }
-}
-
+// Function to display user data on the webpage
 function displayUserData(userData) {
     const userContainer = document.getElementById('user');
-    userContainer.innerHTML = `
-        <div class="bg-white w-[70%] self-center mt-16 h-[350px] rounded-xl">
-            <h2>${userData.name}</h2>
-            <p>${userData.bio}</p>
-            <p>Followers: ${userData.followers}</p>
-            <p>Following: ${userData.following}</p>
-            <p>Public Repos: ${userData.public_repos}</p>
+    // Create HTML content to display user data
+    const html = `
+    <div class="bg-white w-[70%] mt-16 h-[350px] rounded-xl flex items-start p-8">
+    <img class="w-[60px] h-[60px] rounded-full mr-6" src="${userData.avatar_url}" alt="">
+    <div class="flex flex-col">
+        <h1 class="text-1xl font-bold mt-[1rem]">${userData.name}</h1>
+        <div class="flex">
         </div>
+    </div>
+</div>
+
     `;
+    userContainer.innerHTML = html;
 }
+
