@@ -2,6 +2,7 @@
 document.getElementById('searchForm').addEventListener('submit', function() {
     // Prevent the default form submission behavior
     event.preventDefault();
+    document.getElementById('preloader').style.display = 'block';
     
     // Get the value of the input field (GitHub username)
     const username = document.getElementById('default-search').value.trim();
@@ -102,7 +103,10 @@ function displayUserData(userData) {
             </div>
     `;
     userContainer.innerHTML = html;
+    document.getElementById('preloader').style.display = 'none';
 
+    // Show the user data container
+    document.getElementById('user').style.display = 'block';
 
     let container = document.getElementById('container');
 
